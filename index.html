@@ -116,7 +116,33 @@ c.textAlign='left';c.fillStyle='#2a2030';c.font='bold 42px Georgia';c.fillText('
 const date=new Date(),end=new Date(date);end.setDate(date.getDate()+2);const fmt=d=>d.toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});
 let y=485;function line(txt,bold=false){c.fillStyle='#292231';c.font=(bold?'bold ':'')+'28px Arial';c.fillText(txt,100,y);y+=60}
 function wrap(txt,max=67){let words=txt.split(' '),s='';for(let word of words){if((s+' '+word).length>max){line(s);s=word}else s+=(s?' ':'')+word}if(s)line(s)}
-line('PACIENTE: '+name,true);line('FECHA: '+fmt(date));y+=45;line('DIAGNÓSTICO FICTICIO:',true);wrap(diagnoses[0]);y+=35;line('TRATAMIENTO DE ENTRETENIMIENTO:',true);wrap('Reposo gamer por 72 horas. Evitar juntas, pendientes y llamadas del jefe.');wrap('Se recomienda jugar en casa, descansar y disfrutar hamburguesas de Slider Bros.');y+=35;line('PERIODO: '+fmt(date)+' al '+fmt(end));y+=145;line('Dr. Jorge Borges',true);line('Especialista en Reposo Estratégico');line('University of American Samoa');line('Cédula de ficción: UAS-BCS-1190');y+=90;c.fillStyle='#b92728';c.font='bold 24px Arial';c.fillText('SLIDER BROS. · REPOSO GAMER',100,y);c.strokeStyle='#b92728';c.lineWidth=5;c.strokeRect(85,y-45,740,70);c.fillStyle='#554b53';c.font='21px Arial';c.fillText('PARODIA PUBLICITARIA · SIN VALIDEZ MÉDICA NI LABORAL',100,1640);
+line('PACIENTE: '+name,true);line('FECHA: '+fmt(date));y+=45;line('DIAGNÓSTICO FICTICIO:',true);wrap(diagnoses[0]);y+=35;line('TRATAMIENTO DE ENTRETENIMIENTO:',true);wrap('Reposo gamer por 72 horas. Evitar juntas, pendientes y llamadas del jefe.');wrap('Se recomienda jugar en casa, descansar y disfrutar hamburguesas de Slider Bros.');y+=35;line('PERIODO: '+fmt(date)+' al '+fmt(end));
+/* Pie editorial: firma, sello y aviso separados para evitar superposiciones */
+c.save();
+c.strokeStyle='#b8a5a6';c.lineWidth=2;
+c.beginPath();c.moveTo(100,1355);c.lineTo(555,1355);c.stroke();
+c.textAlign='left';c.fillStyle='#b92728';c.font='italic 43px Georgia';c.fillText('Dr. Borges',105,1415);
+c.fillStyle='#292231';c.font='bold 27px Arial';c.fillText('Dr. Jorge Borges',105,1464);
+c.font='23px Arial';c.fillText('Especialista en Reposo Estratégico',105,1507);
+c.fillStyle='#645762';c.font='22px Arial';c.fillText('University of American Samoa',105,1549);
+c.font='21px Arial';c.fillText('Cédula ficticia: UAS-BCS-1190',105,1588);
+c.restore();
+c.save();c.translate(970,1463);c.rotate(-0.11);
+c.strokeStyle='#b92728';c.lineWidth=6;c.beginPath();c.arc(0,0,107,0,Math.PI*2);c.stroke();
+c.lineWidth=2;c.beginPath();c.arc(0,0,91,0,Math.PI*2);c.stroke();
+c.textAlign='center';c.fillStyle='#b92728';
+c.font='bold 22px Arial';c.fillText('SLIDER BROS.',0,-31);
+c.font='bold 20px Arial';c.fillText('REPOSO GAMER',0,0);
+c.font='bold 31px Georgia';c.fillText('72 HRS',0,45);
+c.restore();
+c.save();
+c.fillStyle='#f8ebe6';c.fillRect(93,1624,1054,88);
+c.strokeStyle='#b92728';c.lineWidth=2.5;c.strokeRect(93,1624,1054,88);
+c.textAlign='center';c.fillStyle='#b92728';c.font='bold 19px Arial';
+c.fillText('SLIDER BROS. · XICOTÉNCATL 1190 · DOCUMENTO PUBLICITARIO',620,1659);
+c.fillStyle='#3c313a';c.font='20px Arial';
+c.fillText('PARODIA: sin validez médica ni laboral.',620,1690);
+c.restore();
 const jpg=atob(canvas.toDataURL('image/jpeg',.91).split(',')[1]),bytes=new Uint8Array(jpg.length);for(let i=0;i<jpg.length;i++)bytes[i]=jpg.charCodeAt(i);let enc=new TextEncoder(),parts=[],offsets=[];function add(s){parts.push(enc.encode(s))}function object(n,content){offsets[n]=parts.reduce((a,p)=>a+p.length,0);add(n+' 0 obj\n'+content+'\nendobj\n')}add('%PDF-1.4\n');object(1,'<< /Type /Catalog /Pages 2 0 R >>');object(2,'<< /Type /Pages /Kids [3 0 R] /Count 1 >>');object(3,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im1 4 0 R >> >> /Contents 5 0 R >>');offsets[4]=parts.reduce((a,p)=>a+p.length,0);add('4 0 obj\n<< /Type /XObject /Subtype /Image /Width 1240 /Height 1754 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+bytes.length+' >>\nstream\n');parts.push(bytes);add('\nendstream\nendobj\n');const stream='q 595 0 0 842 0 0 cm /Im1 Do Q';object(5,'<< /Length '+stream.length+' >>\nstream\n'+stream+'\nendstream');let xref=parts.reduce((a,p)=>a+p.length,0);add('xref\n0 6\n0000000000 65535 f \n');for(let n=1;n<=5;n++)add(String(offsets[n]).padStart(10,'0')+' 00000 n \n');add('trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF');return new Blob(parts,{type:'application/pdf'})}
 let blob;form.addEventListener('submit',e=>{e.preventDefault();patient=safe(input.value);if(!patient)return;blob=pdf(patient);message.textContent=patient+', tienes 72 horas de reposo gamer autorizado por el Dr. Borges (¡de mentiritas!).';first.style.display='none';result.classList.add('active')});document.getElementById('download').onclick=()=>{if(!blob)return;let url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Dr_Borges_Slider_Bros_'+patient.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/gi,'_')+'.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),60000)};document.getElementById('again').onclick=()=>{first.style.display='block';result.classList.remove('active');input.focus()}})();
 </script></body></html>
