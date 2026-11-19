@@ -1,0 +1,31 @@
+name: Compatibilidad navegadores y dispositivos
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: npm install --no-save @playwright/test@1.57.0
+      - name: Install browsers and dependencies
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Test responsive layout, downloads, Chrome, Firefox and Safari
+        run: npx playwright test
+      - name: Archive test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-compatibility-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
